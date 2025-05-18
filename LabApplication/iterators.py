@@ -4,10 +4,11 @@ class NeighbourIterator:
         self.__graph = graph
         self.__currentPositions = 0
         self.__vertex = vertex
+        self.__neighbours = list(self.__graph._Graph__outbound_neighbours[self.__vertex])
 
     def valid(self):
         # Theta(1)
-        return self.__currentPositions < self.__graph.size_of_outbound_neighbours(self.__vertex)
+        return self.__currentPositions < len(self.__neighbours)
 
     def next(self):
         # Theta(1)
@@ -19,7 +20,7 @@ class NeighbourIterator:
         # Theta(1)
         if not self.valid():
             raise ValueError("No more neighbours")
-        return list(self.__graph._Graph__outbound_neighbours[self.__vertex])[self.__currentPositions]
+        return self.__neighbours[self.__currentPositions]
 
 class InboundNeighbourIterator:
     def __init__(self, graph, vertex):
@@ -27,10 +28,11 @@ class InboundNeighbourIterator:
         self.__graph = graph
         self.__currentPositions = 0
         self.__vertex = vertex
+        self.__neighbours = list(self.__graph._Graph__inbound_neighbours[self.__vertex])
 
     def valid(self):
         # Theta(1)
-        return self.__currentPositions < self.__graph.size_of_inbound_neighbours(self.__vertex)
+        return self.__currentPositions < len(self.__neighbours)
 
     def next(self):
         # Theta(1)
@@ -42,7 +44,7 @@ class InboundNeighbourIterator:
         # Theta(1)
         if not self.valid():
             raise ValueError("No more neighbours")
-        return list(self.__graph._Graph__inbound_neighbours[self.__vertex])[self.__currentPositions]
+        return self.__neighbours[self.__currentPositions]
 
 
 class BFS:

@@ -6,8 +6,8 @@ class Graph:
         # Theta(1)
         self.__vertices = []
         self.__edges = {}
-        self.__directed = True
-        self.__weighted = False
+        self.__directed = False
+        self.__weighted = True
         self.__inbound_neighbours = defaultdict(set)
         self.__outbound_neighbours = defaultdict(set)
         self.__cost = 0
@@ -111,18 +111,26 @@ class Graph:
         else:
             raise ValueError("Vertices {} are not in the graph".format(edge))
 
-
     def remove_vertex(self, vertex: str):
         # O(v + e)
         if vertex in self.__vertices:
             self.__vertices.remove(vertex)
             if vertex in self.__inbound_neighbours.keys():
+                for neighbour in self.__inbound_neighbours[vertex]:
+                    self.__inbound_neighbours[neighbour].remove(vertex)
                 self.__inbound_neighbours.pop(vertex)
             if vertex in self.__outbound_neighbours.keys():
+                for neighbour in self.__outbound_neighbours[vertex]:
+                    self.__outbound_neighbours[neighbour].remove(vertex)
                 self.__outbound_neighbours.pop(vertex)
-            for edge in self.__edges.keys():
-                if edge[0] == vertex or edge[1] == vertex:
-                    self.__edges.pop(edge)
+
+            # Create a list of edges to remove
+            edges_to_remove = [edge for edge in self.__edges.keys()
+                               if edge[0] == vertex or edge[1] == vertex]
+
+            # Remove edges from the list
+            for edge in edges_to_remove:
+                self.__edges.pop(edge)
         else:
             raise ValueError("Vertex {} is not in the graph".format(vertex))
 
@@ -172,6 +180,9 @@ class Graph:
         # Theta(1)
         return self.__vertices[:]
 
+    def get_edges(self):
+        return self.__edges.copy()
+
     def return_edges(self):
         # Theta(e)
         s = str()
@@ -215,6 +226,10 @@ class Graph:
             if parts[0] == vertex:
                 return float(parts[1]), float(parts[2])
         raise ValueError("Vertex {} not found in file".format(vertex))
+
+    def count_neighbours(self, vertex):
+        return len(self.__outbound_neighbours[vertex])
+
 
     def __str__(self):
         return str(f"{self.directed()} {self.weighted()} \n{self.return_edges()}{self.get_isolated_vertices()}\n")

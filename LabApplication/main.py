@@ -3,7 +3,7 @@ from graph import Graph
 if __name__ == "__main__":
     g = Graph.create_from_file("A2_3.txt")
     g.add_edge(('B', 'A'))
-    #g.remove_edge(('2', '1'))
+    g.remove_edge(('B', 'A'))
     try:
         print(g.get_vertices())
         print(g.get_v())
